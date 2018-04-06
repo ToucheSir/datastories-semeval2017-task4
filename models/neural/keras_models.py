@@ -1,7 +1,7 @@
 from keras.constraints import maxnorm
 from keras.engine import Input
 from keras.engine import Model
-from keras.engine import merge
+from keras.layers import merge
 from keras.layers import Dropout, Dense, Bidirectional, LSTM, \
     Embedding, GaussianNoise, Activation, Flatten, \
     TimeDistributed, RepeatVector, Permute, MaxoutDense, GlobalMaxPooling1D, \
@@ -62,8 +62,8 @@ def weighted_states(activations, rnn_size, input_length, attention="single"):
 def get_RNN(unit=LSTM, cells=64, bi=False, return_sequences=True, dropout_U=0.,
             consume_less='cpu', l2_reg=0):
     rnn = unit(cells, return_sequences=return_sequences,
-               consume_less=consume_less, dropout_U=dropout_U,
-               W_regularizer=l2(l2_reg))
+               recurrent_dropout=dropout_U,
+               kernel_regularizer=l2(l2_reg))
     if bi:
         return Bidirectional(rnn)
     else:
